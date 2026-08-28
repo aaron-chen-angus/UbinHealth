@@ -602,7 +602,4 @@ seek appropriate medical care.
 
 ### Note on the cover photograph
 
-The supplied Pulau Ubin photograph is embedded as a Base64 JPEG data-URI in
-`assets/cover.js`, so the app is self-contained with no external image asset.
-The app references only `window.COVER_IMAGE`; to swap the photo, replace that
-data-URI value.
+The cover photo features Chen Hui Hui, who acts in our Ubin short film titled 《等风停》 and this is to also help promote our film to the residents :)
