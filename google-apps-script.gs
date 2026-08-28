@@ -1,31 +1,34 @@
 /**
- * PULAU UBIN HEALTH CHECK — Google Apps Script (FUTURE integration)
+ * PULAU UBIN HEALTH CHECK — Google Apps Script
  *
- * Receives POST requests from the web app and appends result data
- * to a Google Sheet. This file is NOT used until you deploy it and
- * set CONFIG.googleSheets.enabled = true with the Web App URL.
+ * Receives POST requests from the web app and appends each result
+ * as a new row in this Google Sheet.
  *
- * SETUP:
- *   1. Create a new Google Sheet.
+ * SETUP (do this from INSIDE the sheet you want data in):
+ *   1. Open your Google Sheet.
  *   2. Extensions -> Apps Script.
- *   3. Paste this entire file.
- *   4. Replace SPREADSHEET_ID with your Google Sheet ID.
- *   5. Deploy -> New deployment -> Web app
- *        Execute as: Me
- *        Who has access: Anyone
- *   6. Copy the Web App URL into config.js -> googleSheets.webAppUrl
- *      and set googleSheets.enabled = true.
+ *   3. Delete any starter code, paste this ENTIRE file, click Save (disk icon).
+ *   4. Deploy -> New deployment -> (gear) Web app
+ *         Description : Ubin Health Check
+ *         Execute as  : Me
+ *         Who has access : Anyone
+ *      Click Deploy, then Authorize access and allow the permissions.
+ *   5. Copy the "Web app" URL (ends with /exec).
+ *   6. In config.js set:
+ *         googleSheets: { enabled: true, webAppUrl: "PASTE_URL_HERE" }
+ *
+ * Because this script is bound to the sheet, it writes to the ACTIVE
+ * spreadsheet automatically — no spreadsheet ID needs to be pasted.
  */
 
-const SPREADSHEET_ID = "REPLACE_WITH_YOUR_SHEET_ID";
 const SHEET_NAME = "Results";
 
 function doPost(e) {
   try {
     var data;
-    if (e.postData && e.postData.contents) {
+    if (e && e.postData && e.postData.contents) {
       data = JSON.parse(e.postData.contents);
-    } else if (e.parameter && e.parameter.data) {
+    } else if (e && e.parameter && e.parameter.data) {
       data = JSON.parse(e.parameter.data);
     } else {
       throw new Error("No data received");
@@ -51,8 +54,9 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+/** Writes to the spreadsheet this script is bound to. */
 function getOrCreateSheet() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = ss.insertSheet(SHEET_NAME);
   return sheet;
