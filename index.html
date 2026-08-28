@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#5a9367">
+    <meta name="description" content="Pulau Ubin Health Check — community health screening.">
+    <title>Pulau Ubin Health Check</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- ============================================================
+             COVER / ENTRY PAGE
+             ============================================================ -->
+        <section id="page-cover" class="page page-cover active">
+            <div class="cover-image" id="coverImage" role="img"
+                 aria-label="Welcome to Pulau Ubin village gate surrounded by greenery"></div>
+            <div class="cover-overlay">
+                <div class="cover-text">
+                    <h1 class="cover-title">Pulau Ubin<br>Health Check</h1>
+                    <p class="cover-subtitle">Community Health Screening</p>
+                </div>
+                <button class="btn btn-primary btn-cover" id="startBtn">
+                    Start Health Check
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             MAIN FLOW (progress + step pages)
+             ============================================================ -->
+        <div id="flow" class="flow hidden">
+            <!-- Progress indicator -->
+            <nav class="progress" id="progress" aria-label="Progress">
+                <ol class="progress-list" id="progressList">
+                    <li data-step="1"><span class="dot">1</span><span class="lbl">Demographics</span></li>
+                    <li data-step="2"><span class="dot">2</span><span class="lbl">BMI</span></li>
+                    <li data-step="3"><span class="dot">3</span><span class="lbl">Body Comp.</span></li>
+                    <li data-step="4"><span class="dot">4</span><span class="lbl">Blood Pressure</span></li>
+                    <li data-step="5"><span class="dot">5</span><span class="lbl">Results</span></li>
+                </ol>
+            </nav>
+
+            <main class="content">
+                <!-- ---------- STEP 1: DEMOGRAPHICS ---------- -->
+                <section id="page-demographics" class="page card-page">
+                    <h2 class="page-title">🌿 Demographics</h2>
+
+                    <label class="field">
+                        <span class="field-label">Participant Name</span>
+                        <input type="text" id="name" autocomplete="off" placeholder="Full name">
+                        <span class="field-error" id="err-name"></span>
+                    </label>
+
+                    <fieldset class="field">
+                        <legend class="field-label">Gender</legend>
+                        <div class="segmented" id="gender">
+                            <button type="button" class="seg" data-value="Male">Male</button>
+                            <button type="button" class="seg" data-value="Female">Female</button>
+                        </div>
+                        <span class="field-error" id="err-gender"></span>
+                    </fieldset>
+
+                    <label class="field">
+                        <span class="field-label">Year of Birth</span>
+                        <input type="number" id="yearOfBirth" inputmode="numeric"
+                               placeholder="e.g. 1958" min="1900" max="2100">
+                        <span class="field-hint" id="ageHint"></span>
+                        <span class="field-error" id="err-year"></span>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Location of Test</span>
+                        <select id="location">
+                            <option value="">Select location…</option>
+                        </select>
+                        <span class="field-error" id="err-location"></span>
+                    </label>
+
+                    <div class="nav-row">
+                        <button class="btn btn-primary" data-next="demographics">Continue</button>
+                    </div>
+                </section>
+
+                <!-- ---------- STEP 2: BMI ---------- -->
+                <section id="page-bmi" class="page card-page hidden">
+                    <h2 class="page-title">🌱 Body Mass Index</h2>
+
+                    <label class="field">
+                        <span class="field-label">Height (cm)</span>
+                        <input type="number" id="heightCm" inputmode="decimal" placeholder="e.g. 165">
+                        <span class="field-error" id="err-height"></span>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Weight (kg)</span>
+                        <input type="number" id="weightKg" inputmode="decimal" placeholder="e.g. 62">
+                        <span class="field-error" id="err-weight"></span>
+                    </label>
+
+                    <div id="bmiLive" class="live-result hidden"></div>
+
+                    <div class="nav-row">
+                        <button class="btn btn-ghost" data-back>Back</button>
+                        <button class="btn btn-primary" data-next="bmi">Continue</button>
+                    </div>
+                </section>
+
+                <!-- ---------- STEP 3: BODY COMPOSITION ---------- -->
+                <section id="page-bodycomp" class="page card-page hidden">
+                    <h2 class="page-title">🍃 Body Composition</h2>
+
+                    <label class="field">
+                        <span class="field-label">Body Fat (%)</span>
+                        <input type="number" id="bodyFat" inputmode="decimal" placeholder="e.g. 28.5">
+                        <span class="field-error" id="err-bodyfat"></span>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Basal Metabolic Rate (BMR) — kcal/day</span>
+                        <input type="number" id="bmr" inputmode="numeric" placeholder="e.g. 1430">
+                        <span class="field-hint">Device-reported BMR (from a body-composition analyser).</span>
+                        <span class="field-error" id="err-bmr"></span>
+                    </label>
+
+                    <div id="bodyCompLive" class="live-result hidden"></div>
+
+                    <div class="nav-row">
+                        <button class="btn btn-ghost" data-back>Back</button>
+                        <button class="btn btn-primary" data-next="bodycomp">Continue</button>
+                    </div>
+                </section>
+
+                <!-- ---------- STEP 4: BLOOD PRESSURE ---------- -->
+                <section id="page-bp" class="page card-page hidden">
+                    <h2 class="page-title">🌊 Blood Pressure &amp; Resting Heart Rate</h2>
+
+                    <label class="field">
+                        <span class="field-label">Systolic Blood Pressure (mmHg)</span>
+                        <input type="number" id="systolic" inputmode="numeric" placeholder="e.g. 128">
+                        <span class="field-error" id="err-systolic"></span>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Diastolic Blood Pressure (mmHg)</span>
+                        <input type="number" id="diastolic" inputmode="numeric" placeholder="e.g. 78">
+                        <span class="field-error" id="err-diastolic"></span>
+                    </label>
+
+                    <label class="field">
+                        <span class="field-label">Resting Heart Rate (beats/minute)</span>
+                        <input type="number" id="restingHR" inputmode="numeric" placeholder="e.g. 72">
+                        <span class="field-error" id="err-hr"></span>
+                    </label>
+
+                    <div id="bpLive" class="live-result hidden"></div>
+
+                    <div class="nav-row">
+                        <button class="btn btn-ghost" data-back>Back</button>
+                        <button class="btn btn-primary" data-next="bp">View Results</button>
+                    </div>
+                </section>
+
+                <!-- ---------- STEP 5: RESULTS ---------- -->
+                <section id="page-results" class="page hidden">
+                    <div id="resultsRoot"></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- ============================================================
+             SAVED RESULTS MODAL
+             ============================================================ -->
+        <div id="savedModal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Saved results">
+            <div class="modal-box">
+                <div class="modal-head">
+                    <h2>Saved Results</h2>
+                    <button class="modal-close" id="closeSaved" aria-label="Close">✕</button>
+                </div>
+                <div id="savedList" class="saved-list"></div>
+                <div class="modal-foot">
+                    <button class="btn btn-danger" id="deleteAllBtn">Delete All Saved Results</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts (order matters: config -> data -> logic -> app) -->
+    <script src="config.js"></script>
+    <script src="assets/cover.js"></script>
+    <script src="calculations.js"></script>
+    <script src="classifications.js"></script>
+    <script src="results.js"></script>
+    <script src="storage.js"></script>
+    <script src="google-sheets.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
